@@ -1,6 +1,6 @@
 # NAME
 
-Test::QUnit -
+Test::QUnit - execute QUnit with TAP, via mozrepl.
 
 # SYNOPSIS
 

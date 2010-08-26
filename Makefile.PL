@@ -6,7 +6,8 @@ readme_markdown_from 'lib/Test/QUnit.pm';
 readme_pod_from 'lib/Test/QUnit.pm';
 githubmeta;
 
-# requires '';
+requires 'MozRepl';
+requires 'MozRepl::RemoteObject';
 
 tests 't/*.t';
 author_tests 'xt';
