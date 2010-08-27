@@ -5,6 +5,8 @@ use Path::Class;
 use Plack::App::Directory;
 use Plack::Runner;
 
+use Data::Dumper;
+
 use Test::QUnit;
 
 my $r = MozRepl->new;
@@ -32,7 +34,9 @@ JS
     # hook_qunit_log
 
     Test::QUnit::hook_qunit_log();
+
     $Test::QUnit::tab->{linkedBrowser}->reload();
+    note 'sleep';
     sleep(2);
 
     isnt($Test::QUnit::tab->{__test__qunit__}->{truth}, undef, 'tab.__test__qunit__.truth exists');
@@ -49,6 +53,7 @@ JS
     isnt($Test::QUnit::tab->{__test__qunit__}->{result}->[0], 1, 'tab.__test__qunit__.result is empty now');
 
     $Test::QUnit::tab->{linkedBrowser}->reload();
+    note 'sleep';
     sleep(2);
 
     is($Test::QUnit::tab->{__test__qunit__}->{truth}, undef, 'tab.__test__qunit__.truth not exists');
@@ -61,13 +66,28 @@ subtest('core methods' => sub {
 
     # run_test
 
-    my $qunit_test_dir = 't/qunit';
+    my $qunit_test_dir = 'qunit';
     my $app = Plack::App::Directory->new( root => $qunit_test_dir )->to_app;
     my $runner = Plack::Runner->new;
 
-    $runner->run($app);
+    my $pid = fork;
 
-    ok(1);
+    if ( $pid ) {
+    # parent
+
+        sleep(2);
+
+        my $result = Test::QUnit::run_test('http://localhost:8080/index.html');
+
+        isnt($result, undef, 'we got a result');
+
+        #system("kill -KILL $pid");
+    }
+    else {
+    # child
+        note 'running Plack server for running QUnit test suite';
+        $runner->run($app);
+    }
 
     done_testing;
 });

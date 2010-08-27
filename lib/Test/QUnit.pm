@@ -54,6 +54,7 @@ JS
                         var window = event.originalTarget.wrappedJSObject;
                         window.QUnit.log = function(a, msg) {
                             tab.__test__qunit__.result.push( { success: a, message: msg } );
+                            alert(msg);
                         };
                     }, false);
                 }
@@ -67,6 +68,7 @@ JS
 sub url_ok($;$) {
     my ($url, $msg) = @_;
 
+    cleanup();
 }
 
 sub run_test {
@@ -78,11 +80,7 @@ sub run_test {
     $tab_obj.linkedBrowser.contentWindow.location = '$url';
 JS
 
-    my $result = $tab->{__test__qunit__}->{result};
-
-    cleanup();
-
-    return $result;
+    return $tab->{__test__qunit__}->{result};
 }
 
 sub inject_select_window_function {
