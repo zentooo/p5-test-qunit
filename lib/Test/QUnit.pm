@@ -4,16 +4,20 @@ use warnings;
 our $VERSION = '0.01';
 
 my $CLASS = __PACKAGE__;
+
 use base qw(Test::Builder::Module);
+
 use MozRepl;
 use MozRepl::RemoteObject;
 
-#our @EXPORT = qw(url_ok done_testing plan);
+our @EXPORT = qw(url_ok);
 
 my $r;
 my $repl;
+
 our $tab;
 our $tab_index;
+
 my $tab_obj;
 my $qunit_obj;
 
@@ -63,6 +67,11 @@ JS
 sub url_ok($;$) {
     my ($url, $msg) = @_;
 
+}
+
+sub run_test {
+    my $url = shift;
+
     hook_qunit_log();
 
     $repl->expr(<<"JS");
@@ -72,6 +81,8 @@ JS
     my $result = $tab->{__test__qunit__}->{result};
 
     cleanup();
+
+    return $result;
 }
 
 sub inject_select_window_function {
