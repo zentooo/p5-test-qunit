@@ -84,7 +84,7 @@ subtest('tests for result_to_tap' => sub {
 });
 
 
-subtest('tests for url_ok' => sub {
+subtest('tests for qunit_ok' => sub {
 
     my $qunit_test_dir = 'qunit';
     my $app = Plack::App::Directory->new( root => $qunit_test_dir )->to_app;
@@ -103,7 +103,7 @@ subtest('tests for url_ok' => sub {
             push @output, $_;
         };
 
-        Test::QUnit::url_ok('http://localhost:8080/index.html');
+        Test::QUnit::qunit_ok('http://localhost:8080/index.html');
 
         ok(1);
 

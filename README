@@ -4,10 +4,11 @@ NAME
 SYNOPSIS
       use Test::QUnit;
 
-      url_ok('http://your/qunit/test.html', 'description');
+      qunit_ok('http://your/file/path/to/qunit/test.index', 'description');
 
 DESCRIPTION
-    Test::QUnit is testing framework to runQUnit test suite with TAP output, via MozRepl.
+    Test::QUnit is testing framework to run QUnit test suites with prove,
+    via MozRepl.
 
 AUTHOR
     zentooo <ankerasoy@gmail.com>

@@ -12,7 +12,7 @@ use MozRepl::RemoteObject;
 use Time::HiRes qw(sleep);
 use Data::Util qw(:check);
 
-our @EXPORT = qw(url_ok inject_select_window_function);
+our @EXPORT = qw(qunit_ok inject_select_window_function);
 
 my $r;
 my $repl;
@@ -91,7 +91,7 @@ JS
 }
 
 
-sub url_ok($;$) {
+sub qunit_ok($;$) {
     my ($url, $diag) = @_;
 
     my $raw_result = run_test($url);
@@ -186,15 +186,17 @@ __END__
 
 =head1 NAME
 
-Test::QUnit - execute QUnit with TAP, via mozrepl.
+Test::QUnit - Yet Another Testing Framework for QUnit.
 
 =head1 SYNOPSIS
 
   use Test::QUnit;
 
+  qunit_ok('http://your/file/path/to/qunit/test.index', 'description');
+
 =head1 DESCRIPTION
 
-Test::QUnit is
+Test::QUnit is testing framework to run QUnit test suites with prove, via MozRepl.
 
 =head1 AUTHOR
 
