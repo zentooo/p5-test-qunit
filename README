@@ -4,7 +4,7 @@ NAME
 SYNOPSIS
       use Test::QUnit;
 
-      qunit_ok('http://your/file/path/to/qunit/test.index', 'description');
+      qunit_ok('http://path/to/qunit/test.html', 'description');
 
 DESCRIPTION
     Test::QUnit is testing framework to run QUnit test suites with prove,
