@@ -1,11 +1,8 @@
 use strict;
-use Test::Most;
+use Test::More;
 
-use Path::Class;
 use Plack::App::Directory;
 use Plack::Runner;
-
-use Data::Dumper;
 
 use Test::QUnit;
 
@@ -13,7 +10,7 @@ my $r = MozRepl->new;
 my $repl = MozRepl::RemoteObject->install_bridge($r);
 
 
-subtest('sub methods' => sub {
+subtest('tests for inject_select_window_function' => sub {
 
     $repl->expr(<<"JS");
      var tab = getBrowser().mTabBox._tabs.childNodes[$Test::QUnit::tab_index];
@@ -30,8 +27,11 @@ JS
     }");
     isnt($Test::QUnit::tab->{__test__qunit__}->{selectWindow}, undef, 'tab.__test__qunit__.selectWindow exists');
 
+    done_testing;
+});
 
-    # hook_qunit_log
+
+subtest('tests for hook_qunit_log' => sub {
 
     Test::QUnit::hook_qunit_log();
 
@@ -42,8 +42,11 @@ JS
     isnt($Test::QUnit::tab->{__test__qunit__}->{truth}, undef, 'tab.__test__qunit__.truth exists');
     isnt($Test::QUnit::tab->{__test__qunit__}->{result}->[0], undef, 'tab.__test__qunit__.result has 1');
 
+    done_testing;
+});
 
-    # cleanup
+
+subtest('tests for cleanup' => sub {
 
     $repl->expr(<<"JS");
      var tab = getBrowser().mTabBox._tabs.childNodes[$Test::QUnit::tab_index];
@@ -57,37 +60,6 @@ JS
     sleep(2);
 
     is($Test::QUnit::tab->{__test__qunit__}->{truth}, undef, 'tab.__test__qunit__.truth not exists');
-
-    done_testing;
-});
-
-
-subtest('core methods' => sub {
-
-    # run_test
-
-    my $qunit_test_dir = 'qunit';
-    my $app = Plack::App::Directory->new( root => $qunit_test_dir )->to_app;
-    my $runner = Plack::Runner->new;
-
-    my $pid = fork;
-
-    if ( $pid ) {
-    # parent
-
-        sleep(2);
-
-        my $result = Test::QUnit::run_test('http://localhost:8080/index.html');
-
-        isnt($result, undef, 'we got a result');
-
-        #system("kill -KILL $pid");
-    }
-    else {
-    # child
-        note 'running Plack server for running QUnit test suite';
-        $runner->run($app);
-    }
 
     done_testing;
 });
