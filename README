@@ -1,11 +1,13 @@
 NAME
-    Test::QUnit - execute QUnit with TAP, via mozrepl.
+    Test::QUnit - Yet Another Testing Framework for QUnit.
 
 SYNOPSIS
       use Test::QUnit;
 
+      url_ok('http://your/qunit/test.html', 'description');
+
 DESCRIPTION
-    Test::QUnit is
+    Test::QUnit is testing framework to runQUnit test suite with TAP output, via MozRepl.
 
 AUTHOR
     zentooo <ankerasoy@gmail.com>
