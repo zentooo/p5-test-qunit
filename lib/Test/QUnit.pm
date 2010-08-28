@@ -3,6 +3,8 @@ use strict;
 use warnings;
 our $VERSION = '0.01';
 
+binmode(STDOUT, ":utf8");
+
 use base qw(Test::Builder::Module);
 my $CLASS = __PACKAGE__;
 
