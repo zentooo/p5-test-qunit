@@ -7,10 +7,13 @@ use Plack::Runner;
 use Data::Util qw(:check);
 
 use Test::QUnit;
+use Test::QUnit::Bridge::MozRepl;
 
 
 my $r = MozRepl->new;
 my $repl = MozRepl::RemoteObject->install_bridge($r);
+
+my $bridge = Test::QUnit::Bridge::MozRepl->new;
 
 
 subtest('tests for run_test' => sub {
@@ -26,7 +29,7 @@ subtest('tests for run_test' => sub {
 
         sleep(1);
 
-        my $result = Test::QUnit::run_test('http://localhost:8080/index.html');
+        my $result = $bridge->run_test('http://localhost:8080/index.html');
 
         $result->{length};
         isnt($result, undef, 'we got a result');
@@ -63,8 +66,8 @@ subtest('tests for result_to_tap' => sub {
 
         sleep(1);
 
-        my $raw_result = Test::QUnit::run_test('http://localhost:8080/index.html');
-        my $tap_result = Test::QUnit::result_to_tap($raw_result);
+        my $raw_result = $bridge->run_test('http://localhost:8080/index.html');
+        my $tap_result = $bridge->result_to_tap($raw_result);
 
         for my $result (@$tap_result) {
             ok( $result->{success} == 0 || $result->{success} == 1, 'success flag should be 0 or 1');
@@ -96,15 +99,7 @@ subtest('tests for qunit_ok' => sub {
 
         sleep(1);
 
-        #my @output;
-
-        #use Tie::STDOUT print => sub {
-            #push @output, $_;
-        #};
-
-        #Test::QUnit::qunit_ok('http://localhost:8080/index.html');
-
-        ok(1);
+        qunit_ok('http://localhost:8080/index.html');
 
         system("kill -KILL $pid");
     }
