@@ -13,9 +13,8 @@ use Data::Util qw(:check);
 
 
 sub new {
-    my ($class, $repl) = @_;
-    my $r = $repl || MozRepl->new;
-    my $bridge = MozRepl::RemoteObject->install_bridge($r);
+    my $class = shift;
+    my $bridge = MozRepl::RemoteObject->install_bridge(MozRepl->new);
     my $tab = $bridge->expr("getBrowser().addTab('http://google.com')");
     my $tab_index = $tab->{_tPos};
     my $tab_obj = "getBrowser().mTabBox._tabs.childNodes[$tab_index]";

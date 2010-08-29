@@ -44,7 +44,8 @@ sub inject_bridge {
         my $module_name = "Test::QUnit::Bridge::$name";
         $module_name->require;
         no strict 'refs';
-        $bridge = $module_name->new($imple);
+        $bridge = $module_name->new;
+        $bridge->inject_bridge($imple);
         $bridges{$name} = $bridge;
     }
 }
