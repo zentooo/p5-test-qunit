@@ -15,17 +15,15 @@ my %bridges;
 my $bridge = Test::QUnit::Bridge::MozRepl->new;
 $bridges{'MozRepl'} = $bridge;
 
+my $builder = __PACKAGE__->builder;
+
 
 sub qunit_ok($;$) {
     my ($url, $msg) = @_;
 
     my $message = $msg || '';
 
-    my $raw_result = $bridge->run_test($url);
-    my $tap_result = $bridge->result_to_tap($raw_result);
-    $bridge->cleanup();
-
-    my $builder = __PACKAGE__->builder;
+    my $tap_result = $bridge->run_qunit($url);
 
     $builder->subtest($message => sub {
         for my $result (@$tap_result) {

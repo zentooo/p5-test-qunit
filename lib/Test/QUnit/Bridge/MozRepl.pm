@@ -85,10 +85,37 @@ JS
     });
 }
 
+
+## overrides
+
 sub inject_bridge {
     my ($self, $repl) = @_;
     $self->bridge(MozRepl::RemoteObject->install_bridge($repl));
 }
+
+sub inject_select_window_function {
+    my ($self, $js) = @_;
+
+    $self->{bridge}->expr(<<"JS");
+    $self->{qunit_obj}.selectWindow = $js;
+JS
+}
+
+sub run_qunit {
+    my ($self, $url) = @_;
+
+    $self->hook_qunit_log();
+
+    my $result = $self->run_test($url);
+    my $tap_result = $self->result_to_tap($result);
+
+    $self->cleanup();
+
+    return $tap_result;
+}
+
+
+## helpers
 
 sub result_to_tap {
     my ($self, $result) = @_;
@@ -120,8 +147,6 @@ sub result_to_tap {
 sub run_test {
     my ($self, $url) = @_;
 
-    $self->hook_qunit_log();
-
     $self->{bridge}->expr(<<"JS");
     $self->{tab_obj}.linkedBrowser.contentWindow.location = '$url';
 JS
@@ -140,13 +165,6 @@ JS
     return $self->{tab}->{__test__qunit__}->{result};
 }
 
-sub inject_select_window_function {
-    my ($self, $js) = @_;
-
-    $self->{bridge}->expr(<<"JS");
-    $self->{qunit_obj}.selectWindow = $js;
-JS
-}
 
 sub hook_qunit_log {
     my $self = shift;

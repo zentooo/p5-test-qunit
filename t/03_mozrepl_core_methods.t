@@ -10,9 +10,6 @@ use Test::QUnit;
 use Test::QUnit::Bridge::MozRepl;
 
 
-my $r = MozRepl->new;
-my $repl = MozRepl::RemoteObject->install_bridge($r);
-
 my $bridge = Test::QUnit::Bridge::MozRepl->new;
 
 
@@ -29,6 +26,8 @@ subtest('tests for run_test' => sub {
 
         sleep(1);
 
+        $bridge->hook_qunit_log();
+
         my $result = $bridge->run_test('http://localhost:8080/index.html');
 
         $result->{length};
@@ -40,6 +39,8 @@ subtest('tests for run_test' => sub {
             isnt($item->{success}, undef, 'item has "success" property');
             isnt($item->{message}, undef, 'item has "message" property');
         }
+
+        $bridge->cleanup();
 
         system("kill -KILL $pid");
     }
@@ -66,6 +67,8 @@ subtest('tests for result_to_tap' => sub {
 
         sleep(1);
 
+        $bridge->hook_qunit_log();
+
         my $raw_result = $bridge->run_test('http://localhost:8080/index.html');
         my $tap_result = $bridge->result_to_tap($raw_result);
 
@@ -73,6 +76,8 @@ subtest('tests for result_to_tap' => sub {
             ok( $result->{success} == 0 || $result->{success} == 1, 'success flag should be 0 or 1');
             ok( $result->{message} =~ /.*/, 'message should be string');
         }
+
+        $bridge->cleanup();
 
         system("kill -KILL $pid");
     }
@@ -86,7 +91,7 @@ subtest('tests for result_to_tap' => sub {
 });
 
 
-subtest('tests for qunit_ok' => sub {
+subtest('tests for run_qunit' => sub {
 
     my $qunit_test_dir = 'qunit';
     my $app = Plack::App::Directory->new( root => $qunit_test_dir )->to_app;
@@ -99,7 +104,12 @@ subtest('tests for qunit_ok' => sub {
 
         sleep(1);
 
-        qunit_ok('http://localhost:8080/index.html');
+        my $tap_result = $bridge->run_qunit('http://localhost:8080/index.html');
+
+        for my $result (@$tap_result) {
+            ok( $result->{success} == 0 || $result->{success} == 1, 'success flag should be 0 or 1');
+            ok( $result->{message} =~ /.*/, 'message should be string');
+        }
 
         system("kill -KILL $pid");
     }

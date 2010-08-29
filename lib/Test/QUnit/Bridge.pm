@@ -29,28 +29,13 @@ sub inject_bridge {
     croak("Please override thid method");
 }
 
-sub result_to_tap {
-    my ($self, $result) = @_;
-    croak("Please override thid method");
-}
-
-sub run_test {
-    my ($self, $url) = @_;
-    croak("Please override thid method");
-}
-
 sub inject_select_window_function {
     my ($self, $js) = @_;
     croak("Please override thid method");
 }
 
-sub hook_qunit_log {
-    my $self = shift;
-    croak("Please override thid method");
-}
-
-sub cleanup {
-    my $self = shift;
+sub run_qunit {
+    my ($self, $url) = @_;
     croak("Please override thid method");
 }
 
