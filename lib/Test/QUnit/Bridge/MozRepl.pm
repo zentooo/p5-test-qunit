@@ -3,8 +3,7 @@ package Test::QUnit::Bridge::MozRepl;
 use strict;
 use warnings;
 
-use base qw(Class::Accessor::Fast);
-__PACKAGE__->mk_accessors(qw(tab tab_index bridge));
+use base qw(Test::QUnit::Bridge);
 
 use MozRepl;
 use MozRepl::RemoteObject;

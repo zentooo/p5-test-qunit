@@ -6,6 +6,7 @@ our $VERSION = '0.01';
 binmode(STDOUT, ":utf8");
 
 use base qw(Test::Builder::Module);
+use UNIVERSAL::require;
 use Test::QUnit::Bridge::MozRepl;
 
 our @EXPORT = qw(qunit_ok inject_bridge inject_select_window_function);
@@ -42,8 +43,10 @@ sub inject_bridge {
         $bridge->inject_bridge($imple);
     }
     else {
+        my $module_name = "Test::QUnit::Bridge::$name";
+        $module_name->require;
         no strict 'refs';
-        $bridge = "Test::QUnit::Bridge::$name"->new($imple);
+        $bridge = $module_name->new($imple);
         $bridges{$name} = $bridge;
     }
 }
