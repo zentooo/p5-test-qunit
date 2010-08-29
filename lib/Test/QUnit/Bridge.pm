@@ -26,17 +26,17 @@ sub new {
 
 sub inject_bridge {
     my ($self, $repl) = @_;
-    croak("Please override thid method");
+    croak("Please override this method");
 }
 
 sub inject_select_window_function {
     my ($self, $js) = @_;
-    croak("Please override thid method");
+    croak("Please override this method");
 }
 
 sub run_qunit {
     my ($self, $url) = @_;
-    croak("Please override thid method");
+    croak("Please override this method");
 }
 
 
