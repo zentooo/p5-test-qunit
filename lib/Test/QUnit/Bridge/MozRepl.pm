@@ -130,10 +130,20 @@ sub result_to_tap {
 
         # convert test message
         my $message = "";
+        my $expect = "";
+        my $result = "";
 
         if ( is_string($item->{message}) ) {
             if ( $item->{message} =~ /<span class="test-message">(.*?)<\/span>/ ) {
                 $message = $1;
+                if ( $item->{message} =~ /<span class="test-expected">(.*?)<\/span>(?s:.*?)<span class="test-actual">(.*?)<\/span>/ ) {
+                    $expect = $1;
+                    $result = $2;
+                    $message .= " expected: $expect result: $result";
+                }
+            }
+            else  {
+                $message = $item->{message};
             }
         }
 
