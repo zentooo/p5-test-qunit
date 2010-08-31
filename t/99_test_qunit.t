@@ -36,9 +36,11 @@ subtest('inject_onload_function' => sub {
     done_testing;
 });
 
+
+my $qunit_test_dir = 't/qunit';
+
 subtest('tests for qunit_ok' => sub {
 
-    my $qunit_test_dir = 'qunit';
     my $app = Plack::App::Directory->new( root => $qunit_test_dir )->to_app;
     my $runner = Plack::Runner->new;
 

@@ -1,8 +1,6 @@
 use strict;
 use Test::More;
 
-use Plack::App::Directory;
-use Plack::Runner;
 
 use Test::QUnit::Bridge::MozRepl;
 

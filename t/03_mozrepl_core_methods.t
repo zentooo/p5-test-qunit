@@ -11,11 +11,10 @@ use Test::QUnit::Bridge::MozRepl;
 
 
 my $bridge = Test::QUnit::Bridge::MozRepl->new;
-
+my $qunit_test_dir = 't/qunit';
 
 subtest('tests for run_test' => sub {
 
-    my $qunit_test_dir = 'qunit';
     my $app = Plack::App::Directory->new( root => $qunit_test_dir )->to_app;
     my $runner = Plack::Runner->new;
 
@@ -93,7 +92,6 @@ subtest('tests for result_to_tap' => sub {
 
 subtest('tests for run_qunit' => sub {
 
-    my $qunit_test_dir = 'qunit';
     my $app = Plack::App::Directory->new( root => $qunit_test_dir )->to_app;
     my $runner = Plack::Runner->new;
 
