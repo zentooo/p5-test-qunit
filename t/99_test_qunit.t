@@ -27,6 +27,15 @@ subtest('inject_select_window_function' => sub {
     done_testing;
 });
 
+subtest('inject_onload_function' => sub {
+
+    inject_onload_function("function() {
+        return true;
+    }");
+    ok(1);
+    done_testing;
+});
+
 subtest('tests for qunit_ok' => sub {
 
     my $qunit_test_dir = 'qunit';

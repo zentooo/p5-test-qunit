@@ -71,6 +71,10 @@ sub new {
 
                     }, false);
                 }
+
+                if ( typeof tab.__test__qunit__.onload === "function" ) {
+                     tab.__test__qunit__.onload(tab);
+                }
             }
         };
     })();
@@ -97,6 +101,14 @@ sub inject_select_window_function {
 
     $self->{bridge}->expr(<<"JS");
     $self->{qunit_obj}.selectWindow = $js;
+JS
+}
+
+sub inject_onload_function {
+    my ($self, $js) = @_;
+
+    $self->{bridge}->expr(<<"JS");
+    $self->{qunit_obj}.onload = $js;
 JS
 }
 
