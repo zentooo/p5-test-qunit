@@ -34,6 +34,11 @@ sub inject_select_window_function {
     croak("Please override this method");
 }
 
+sub inject_select_onload_function {
+    my ($self, $js) = @_;
+    croak("Please override this method");
+}
+
 sub inject_onload_function {
     my ($self, $js) = @_;
     croak("Please override this method");

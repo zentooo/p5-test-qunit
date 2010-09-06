@@ -7,6 +7,7 @@ use base qw(Test::QUnit::Bridge);
 
 use MozRepl;
 use MozRepl::RemoteObject;
+use Path::Class;
 
 use Time::HiRes qw(sleep);
 use Data::Util qw(:check);
@@ -31,19 +32,33 @@ sub new {
             var target = event.originalTarget;
 
             if ( target instanceof HTMLDocument ) {
-                var wrappedWindow = target.defaultView;
-                var isWantedWindow = true;
+                var nativeWindow = target.defaultView.wrappedJSObject;
+                var window = tab.linkedBrowser.contentWindow.wrappedJSObject;
+                var isSelectedWindow = true;
+                var isSelectedOnload = true;
 
                 if ( typeof tab.__test__qunit__.selectWindow === "function" ) {
-                    isWantedWindow = tab.__test__qunit__.selectWindow(wrappedWindow);
+                    isSelectedWindow = tab.__test__qunit__.selectWindow(window);
                 }
 
-                if ( isWantedWindow ) {
-                    wrappedWindow.addEventListener("load", function(event) {
-                        var window = wrappedWindow.wrappedJSObject;
+                if ( typeof tab.__test__qunit__.selectOnload === "function" ) {
+                    isSelectedOnload = tab.__test__qunit__.selectOnload(window);
+                }
+
+                if ( isSelectedOnload ) {
+
+                    // exec injected onload function if exists
+
+                    if ( typeof tab.__test__qunit__.onload === "function" ) {
+                         tab.__test__qunit__.onload(window);
+                    }
+                }
+
+                if ( isSelectedWindow ) {
+                    nativeWindow.addEventListener("load", function(event) {
 
                         // hook QUnit.log
-                        window.QUnit.log = function(a, msg) {
+                        nativeWindow.QUnit.log = function(a, msg) {
                             if ( typeof a === "boolean" ) {
                                 var message;
 
@@ -64,7 +79,7 @@ sub new {
                         //var doneEvent = window.document.createEvent("Event");
                         //doneEvent.initEvent("doneQunitTest", false, true);
 
-                        window.QUnit.done = function(bad, all) {
+                        nativeWindow.QUnit.done = function(bad, all) {
                             tab.__test__qunit__.done = true;
                             //tab.dispatchEvent("doneQunitTest");
                         };
@@ -72,9 +87,6 @@ sub new {
                     }, false);
                 }
 
-                if ( typeof tab.__test__qunit__.onload === "function" ) {
-                     tab.__test__qunit__.onload(tab);
-                }
             }
         };
     })();
@@ -101,6 +113,14 @@ sub inject_select_window_function {
 
     $self->{bridge}->expr(<<"JS");
     $self->{qunit_obj}.selectWindow = $js;
+JS
+}
+
+sub inject_select_onload_function {
+    my ($self, $js) = @_;
+
+    $self->{bridge}->expr(<<"JS");
+    $self->{qunit_obj}.selectOnload = $js;
 JS
 }
 
