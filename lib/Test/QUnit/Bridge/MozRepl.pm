@@ -18,7 +18,7 @@ sub new {
     my $bridge = MozRepl::RemoteObject->install_bridge(MozRepl->new);
     my $tab = $bridge->expr("getBrowser().addTab('about:blank')");
     my $tab_index = $tab->{_tPos};
-    my $tab_obj = "getBrowser().mTabBox._tabs.childNodes[$tab_index]";
+    my $tab_obj = "getBrowser().tabs[$tab_index]";
     my $qunit_obj = "$tab_obj.__test__qunit__";
 
     $bridge->expr(<<"JS");

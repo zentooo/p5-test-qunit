@@ -5,11 +5,13 @@ use Plack::App::Directory;
 use Plack::Runner;
 
 use MozRepl;
+use MozRepl::RemoteObject;
+
+my $r = MozRepl->new;
+my $repl = MozRepl::RemoteObject->install_bridge($r);
 
 
 BEGIN { use_ok 'Test::QUnit' }
-
-use Test::QUnit;
 
 subtest('inject_bridge' => sub {
 
@@ -63,5 +65,14 @@ subtest('tests for qunit_ok' => sub {
 
     done_testing;
 });
+
+
+# close created tab
+
+$repl->expr(<<"JS");
+  var tabs = getBrowser().tabs;
+  tabs[tabs.length - 1].linkedBrowser.contentWindow.close();
+JS
+
 
 done_testing;

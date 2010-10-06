@@ -6,12 +6,15 @@ use Plack::Runner;
 
 use Data::Util qw(:check);
 
-use Test::QUnit;
 use Test::QUnit::Bridge::MozRepl;
 
 
+my $r = MozRepl->new;
+my $repl = MozRepl::RemoteObject->install_bridge($r);
 my $bridge = Test::QUnit::Bridge::MozRepl->new;
+
 my $qunit_test_dir = 't/qunit';
+
 
 subtest('tests for run_test' => sub {
 
@@ -118,5 +121,12 @@ subtest('tests for run_qunit' => sub {
 
     done_testing;
 });
+
+
+# close created tab
+
+$repl->expr(<<"JS");
+  getBrowser().tabs[$bridge->{tab_index}].linkedBrowser.contentWindow.close();
+JS
 
 done_testing;

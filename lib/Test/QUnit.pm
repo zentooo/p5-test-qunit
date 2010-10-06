@@ -1,7 +1,7 @@
 package Test::QUnit;
 use strict;
 use warnings;
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 binmode(STDOUT, ":utf8");
 
@@ -36,7 +36,7 @@ sub qunit_ok($;$) {
 sub inject_bridge {
     my ($name, $imple) = @_;
 
-    if ( $bridges{$name} ) {
+    if ( exists $bridges{$name} ) {
         $bridge = $bridges{$name};
         $bridge->inject_bridge($imple);
     }

@@ -1,6 +1,8 @@
 use strict;
 use Test::More;
 
+use MozRepl;
+use MozRepl::RemoteObject;
 
 use Test::QUnit::Bridge::MozRepl;
 
@@ -62,5 +64,11 @@ JS
     done_testing;
 });
 
+
+# close created tab
+
+$repl->expr(<<"JS");
+  getBrowser().tabs[$bridge->{tab_index}].linkedBrowser.contentWindow.close();
+JS
 
 done_testing;
