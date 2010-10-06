@@ -16,7 +16,7 @@ use Data::Util qw(:check);
 sub new {
     my $class = shift;
     my $bridge = MozRepl::RemoteObject->install_bridge(MozRepl->new);
-    my $tab = $bridge->expr("getBrowser().addTab('http://google.com')");
+    my $tab = $bridge->expr("getBrowser().addTab('about:blank')");
     my $tab_index = $tab->{_tPos};
     my $tab_obj = "getBrowser().mTabBox._tabs.childNodes[$tab_index]";
     my $qunit_obj = "$tab_obj.__test__qunit__";
@@ -162,20 +162,16 @@ sub result_to_tap {
 
         # convert test message
         my $message = "";
-        my $expect = "";
-        my $result = "";
 
         if ( is_string($item->{message}) ) {
-            if ( $item->{message} =~ /<span class="test-message">(.*?)<\/span>/ ) {
+            if ( $item->{message} =~ /<span class="test-message">(\w+?)<\/span>/ ) {
                 $message = $1;
-                if ( $item->{message} =~ /<span class="test-expected">(.*?)<\/span>(?s:.*?)<span class="test-actual">(.*?)<\/span>/ ) {
-                    $expect = $1;
-                    $result = $2;
-                    $message .= " expected: $expect result: $result";
+                if ( $item->{message} =~ /<span class="test-expected">(\w+?)<\/span>(?s:.*?)<span class="test-actual">(.*?)<\/span>/ ) {
+                    $message .= " expected: $1 result: $2";
                 }
             }
             else  {
-                $message = $item->{message};
+              $message = $item->{message};
             }
         }
 

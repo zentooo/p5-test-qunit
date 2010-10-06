@@ -55,7 +55,6 @@ subtest('tests for run_test' => sub {
 
 subtest('tests for result_to_tap' => sub {
 
-    my $qunit_test_dir = 'qunit';
     my $app = Plack::App::Directory->new( root => $qunit_test_dir )->to_app;
     my $runner = Plack::Runner->new;
 
@@ -73,7 +72,7 @@ subtest('tests for result_to_tap' => sub {
 
         for my $result (@$tap_result) {
             ok( $result->{success} == 0 || $result->{success} == 1, 'success flag should be 0 or 1');
-            ok( $result->{message} =~ /.*/, 'message should be string');
+            ok( is_string($result->{message}), 'message should be string');
         }
 
         $bridge->cleanup();
@@ -106,7 +105,7 @@ subtest('tests for run_qunit' => sub {
 
         for my $result (@$tap_result) {
             ok( $result->{success} == 0 || $result->{success} == 1, 'success flag should be 0 or 1');
-            ok( $result->{message} =~ /.*/, 'message should be string');
+            ok( is_string($result->{message}), 'message should be string');
         }
 
         system("kill -KILL $pid");
