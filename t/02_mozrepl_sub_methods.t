@@ -18,39 +18,16 @@ subtest('tests for inject_select_test_window_function' => sub {
      delete tab.__test__qunit__.truth;
 JS
 
-    # inject_select_window_function
-
     $bridge->inject_select_test_window_function("function() {
         var tab = getBrowser().tabs[$bridge->{tab_index}];
         tab.__test__qunit__.truth = function() { return 'Test::QUnit so awesome!'; };
         tab.__test__qunit__.result.push(1);
         return true;
     }");
-    isnt($bridge->{tab}->{__test__qunit__}->{selectTestWindow}, undef, 'tab.__test__qunit__.selectWindow exists');
+    isnt($bridge->{tab}->{__test__qunit__}->{selectTestWindow}, undef, 'tab.__test__qunit__.selectTestWindow exists');
 
     done_testing;
 });
-
-
-#subtest('tests for inject_select_onload_window_function' => sub {
-
-    #$repl->expr(<<"JS");
-     #var tab = getBrowser().tabs[$bridge->{tab_index}];
-     #delete tab.__test__qunit__.onload;
-#JS
-
-    ## inject_select_window_function
-
-    #$bridge->inject_select_test_window_function("function() {
-        #var tab = getBrowser().tabs[$bridge->{tab_index}];
-        #tab.__test__qunit__.truth = function() { return 'Test::QUnit so awesome!'; };
-        #tab.__test__qunit__.result.push(1);
-        #return true;
-    #}");
-    #isnt($bridge->{tab}->{__test__qunit__}->{selectWindow}, undef, 'tab.__test__qunit__.selectWindow exists');
-
-    #done_testing;
-#});
 
 
 subtest('tests for hook_qunit_log' => sub {
@@ -58,11 +35,49 @@ subtest('tests for hook_qunit_log' => sub {
     $bridge->hook_qunit_log();
 
     $bridge->{tab}->{linkedBrowser}->reload();
-    note 'sleep';
-    sleep(2);
+    note 'sleep for reload';
+    sleep(1);
 
     isnt($bridge->{tab}->{__test__qunit__}->{truth}, undef, 'tab.__test__qunit__.truth exists');
     isnt($bridge->{tab}->{__test__qunit__}->{result}->[0], undef, 'tab.__test__qunit__.result has 1');
+
+    done_testing;
+});
+
+
+subtest('tests for inject_select_onload_window_function' => sub {
+
+    $repl->expr(<<"JS");
+     var tab = getBrowser().tabs[$bridge->{tab_index}];
+     delete tab.__test__qunit__.onload;
+JS
+
+    $bridge->inject_select_onload_window_function("function() {
+        return true;
+    }");
+    isnt($bridge->{tab}->{__test__qunit__}->{selectOnloadWindow}, undef, 'tab.__test__qunit__.selectOnloadWindow exists');
+
+
+    done_testing;
+});
+
+
+subtest('tests for inject_onload_function' => sub {
+
+    $bridge->inject_onload_function("function(window) {
+      var tab = getBrowser().tabs[$bridge->{tab_index}];
+        tab.__test__qunit__.lie = function() { return 'Test::QUnit is so awful...'; };
+    }");
+    isnt($bridge->{tab}->{__test__qunit__}->{onload}, undef, 'tab.__test__qunit__.selectOnloadWindow exists');
+
+
+    # fire onload event
+
+    $bridge->{tab}->{linkedBrowser}->reload();
+    note 'sleep for reload';
+    sleep(1);
+
+    isnt($bridge->{tab}->{__test__qunit__}->{lie}, undef, 'tab.__test__qunit__.lie exists');
 
     done_testing;
 });
