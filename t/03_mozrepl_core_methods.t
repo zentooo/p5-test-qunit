@@ -45,6 +45,8 @@ subtest('tests for run_test' => sub {
         $bridge->cleanup();
 
         system("kill -KILL $pid");
+
+        done_testing;
     }
     else {
     # child
@@ -52,7 +54,6 @@ subtest('tests for run_test' => sub {
         $runner->run($app);
     }
 
-    done_testing;
 });
 
 
@@ -81,6 +82,8 @@ subtest('tests for result_to_tap' => sub {
         $bridge->cleanup();
 
         system("kill -KILL $pid");
+
+        done_testing;
     }
     else {
     # child
@@ -88,7 +91,6 @@ subtest('tests for result_to_tap' => sub {
         $runner->run($app);
     }
 
-    done_testing;
 });
 
 
@@ -112,6 +114,8 @@ subtest('tests for run_qunit' => sub {
         }
 
         system("kill -KILL $pid");
+
+        done_testing;
     }
     else {
     # child
@@ -119,7 +123,6 @@ subtest('tests for run_qunit' => sub {
         $runner->run($app);
     }
 
-    done_testing;
 });
 
 

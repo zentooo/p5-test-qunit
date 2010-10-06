@@ -56,6 +56,8 @@ subtest('tests for qunit_ok' => sub {
         qunit_ok('http://localhost:8080/index.html');
 
         system("kill -KILL $pid");
+
+        done_testing;
     }
     else {
     # child
@@ -63,7 +65,6 @@ subtest('tests for qunit_ok' => sub {
         $runner->run($app);
     }
 
-    done_testing;
 });
 
 
