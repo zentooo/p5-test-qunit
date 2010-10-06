@@ -29,12 +29,12 @@ sub inject_bridge {
     croak("Please override this method");
 }
 
-sub inject_select_window_function {
+sub inject_select_test_window_function {
     my ($self, $js) = @_;
     croak("Please override this method");
 }
 
-sub inject_select_onload_function {
+sub inject_select_onload_window_function {
     my ($self, $js) = @_;
     croak("Please override this method");
 }

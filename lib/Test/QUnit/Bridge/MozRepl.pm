@@ -108,7 +108,7 @@ sub inject_bridge {
     $self->bridge(MozRepl::RemoteObject->install_bridge($repl));
 }
 
-sub inject_select_window_function {
+sub inject_select_test_window_function {
     my ($self, $js) = @_;
 
     $self->{bridge}->expr(<<"JS");
@@ -116,7 +116,7 @@ sub inject_select_window_function {
 JS
 }
 
-sub inject_select_onload_function {
+sub inject_select_onload_window_function {
     my ($self, $js) = @_;
 
     $self->{bridge}->expr(<<"JS");

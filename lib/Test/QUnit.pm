@@ -9,7 +9,7 @@ use base qw(Test::Builder::Module);
 use UNIVERSAL::require;
 use Test::QUnit::Bridge::MozRepl;
 
-our @EXPORT = qw(qunit_ok inject_bridge inject_select_window_function inject_select_onload_function inject_onload_function);
+our @EXPORT = qw(qunit_ok inject_bridge select_test_window select_onload_window onload);
 
 my %bridges;
 my $bridge = Test::QUnit::Bridge::MozRepl->new;
@@ -50,15 +50,15 @@ sub inject_bridge {
     }
 }
 
-sub inject_select_window_function {
-    $bridge->inject_select_window_function(shift);
+sub select_test_window {
+    $bridge->inject_select_test_window_function(shift);
 }
 
-sub inject_select_onload_function {
-    $bridge->inject_select_onload_function(shift);
+sub select_onload_window {
+    $bridge->inject_select_onload_window_function(shift);
 }
 
-sub inject_onload_function {
+sub onload {
     $bridge->inject_onload_function(shift);
 }
 

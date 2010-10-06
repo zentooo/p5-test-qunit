@@ -20,18 +20,18 @@ subtest('inject_bridge' => sub {
     done_testing;
 });
 
-subtest('inject_select_window_function' => sub {
+subtest('select_test_window' => sub {
 
-    inject_select_window_function("function() {
+    select_test_window("function() {
         return true;
     }");
     ok(1);
     done_testing;
 });
 
-subtest('inject_onload_function' => sub {
+subtest('inject_onload_window' => sub {
 
-    inject_onload_function("function() {
+    select_onload_window("function() {
         return true;
     }");
     ok(1);
