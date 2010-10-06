@@ -14,22 +14,43 @@ my $bridge = Test::QUnit::Bridge::MozRepl->new;
 subtest('tests for inject_select_test_window_function' => sub {
 
     $repl->expr(<<"JS");
-     var tab = getBrowser().mTabBox._tabs.childNodes[$bridge->{tab_index}];
+     var tab = getBrowser().tabs[$bridge->{tab_index}];
      delete tab.__test__qunit__.truth;
 JS
 
     # inject_select_window_function
 
     $bridge->inject_select_test_window_function("function() {
-        var tab = getBrowser().mTabBox._tabs.childNodes[$bridge->{tab_index}];
+        var tab = getBrowser().tabs[$bridge->{tab_index}];
         tab.__test__qunit__.truth = function() { return 'Test::QUnit so awesome!'; };
         tab.__test__qunit__.result.push(1);
         return true;
     }");
-    isnt($bridge->{tab}->{__test__qunit__}->{selectWindow}, undef, 'tab.__test__qunit__.selectWindow exists');
+    isnt($bridge->{tab}->{__test__qunit__}->{selectTestWindow}, undef, 'tab.__test__qunit__.selectWindow exists');
 
     done_testing;
 });
+
+
+#subtest('tests for inject_select_onload_window_function' => sub {
+
+    #$repl->expr(<<"JS");
+     #var tab = getBrowser().tabs[$bridge->{tab_index}];
+     #delete tab.__test__qunit__.onload;
+#JS
+
+    ## inject_select_window_function
+
+    #$bridge->inject_select_test_window_function("function() {
+        #var tab = getBrowser().tabs[$bridge->{tab_index}];
+        #tab.__test__qunit__.truth = function() { return 'Test::QUnit so awesome!'; };
+        #tab.__test__qunit__.result.push(1);
+        #return true;
+    #}");
+    #isnt($bridge->{tab}->{__test__qunit__}->{selectWindow}, undef, 'tab.__test__qunit__.selectWindow exists');
+
+    #done_testing;
+#});
 
 
 subtest('tests for hook_qunit_log' => sub {
@@ -50,7 +71,7 @@ subtest('tests for hook_qunit_log' => sub {
 subtest('tests for cleanup' => sub {
 
     $repl->expr(<<"JS");
-     var tab = getBrowser().mTabBox._tabs.childNodes[$bridge->{tab_index}];
+     var tab = getBrowser().tabs[$bridge->{tab_index}];
      delete tab.__test__qunit__.truth;
 JS
     $bridge->cleanup();

@@ -34,18 +34,18 @@ sub new {
             if ( target instanceof HTMLDocument ) {
                 var nativeWindow = target.defaultView.wrappedJSObject;
                 var window = tab.linkedBrowser.contentWindow.wrappedJSObject;
-                var isSelectedWindow = true;
-                var isSelectedOnload = true;
+                var isTestWindow = true;
+                var isOnloadWindow = true;
 
-                if ( typeof tab.__test__qunit__.selectWindow === "function" ) {
-                    isSelectedWindow = tab.__test__qunit__.selectWindow(window);
+                if ( typeof tab.__test__qunit__.selectTestWindow === "function" ) {
+                    isTestWindow = tab.__test__qunit__.selectTestWindow(window);
                 }
 
-                if ( typeof tab.__test__qunit__.selectOnload === "function" ) {
-                    isSelectedOnload = tab.__test__qunit__.selectOnload(window);
+                if ( typeof tab.__test__qunit__.selectOnloadWindow === "function" ) {
+                    isOnloadWindow = tab.__test__qunit__.selectOnloadWindow(window);
                 }
 
-                if ( isSelectedOnload ) {
+                if ( isOnloadWindow ) {
 
                     // exec injected onload function if exists
 
@@ -54,7 +54,7 @@ sub new {
                     }
                 }
 
-                if ( isSelectedWindow ) {
+                if ( isTestWindow ) {
                     nativeWindow.addEventListener("load", function(event) {
 
                         // hook QUnit.log
@@ -112,7 +112,7 @@ sub inject_select_test_window_function {
     my ($self, $js) = @_;
 
     $self->{bridge}->expr(<<"JS");
-    $self->{qunit_obj}.selectWindow = $js;
+    $self->{qunit_obj}.selectTestWindow = $js;
 JS
 }
 
@@ -120,7 +120,7 @@ sub inject_select_onload_window_function {
     my ($self, $js) = @_;
 
     $self->{bridge}->expr(<<"JS");
-    $self->{qunit_obj}.selectOnload = $js;
+    $self->{qunit_obj}.selectOnloadWindow = $js;
 JS
 }
 
