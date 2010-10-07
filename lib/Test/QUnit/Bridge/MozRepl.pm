@@ -164,9 +164,8 @@ sub result_to_tap {
         my $message = "";
 
         if ( is_string($item->{message}) ) {
-            if ( $item->{message} =~ /<span class="test-message">(\w+?)<\/span>/ ) {
-                $message = $1;
-                if ( $item->{message} =~ /<span class="test-expected">(\w+?)<\/span>(?s:.*?)<span class="test-actual">(.*?)<\/span>/ ) {
+            if ( $item->{message} =~ /<span class="test-message">(.*?)<\/span>/ ) {
+                if ( $item->{message} =~ /<span class="test-expected">(.*?)<\/span>(?s:.*?)<span class="test-actual">(.*?)<\/span>/ ) {
                     $message .= " expected: $1 result: $2";
                 }
             }

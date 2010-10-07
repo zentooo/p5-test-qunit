@@ -76,7 +76,7 @@ subtest('tests for result_to_tap' => sub {
 
         for my $result (@$tap_result) {
             ok( $result->{success} == 0 || $result->{success} == 1, 'success flag should be 0 or 1');
-            ok( is_string($result->{message}), 'message should be string');
+            ok( is_string($result->{message} || $result->{message} eq ""), 'message should be string');
         }
 
         $bridge->cleanup();
@@ -110,7 +110,7 @@ subtest('tests for run_qunit' => sub {
 
         for my $result (@$tap_result) {
             ok( $result->{success} == 0 || $result->{success} == 1, 'success flag should be 0 or 1');
-            ok( is_string($result->{message}), 'message should be string');
+            ok( is_string($result->{message} || $result->{message} eq ""), 'message should be string');
         }
 
         system("kill -KILL $pid");
