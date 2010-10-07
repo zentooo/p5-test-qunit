@@ -1,17 +1,18 @@
 use strict;
 use Test::More;
 
-use Plack::App::Directory;
-use Plack::Runner;
-
 use MozRepl;
 use MozRepl::RemoteObject;
+
+use Test::QUnit;
+use t::Util;
 
 my $r = MozRepl->new;
 my $repl = MozRepl::RemoteObject->install_bridge($r);
 
 
 BEGIN { use_ok 'Test::QUnit' }
+
 
 subtest('exported methods' => sub {
 
@@ -21,31 +22,14 @@ subtest('exported methods' => sub {
 });
 
 
-my $qunit_test_dir = 't/qunit';
-
 subtest('tests for qunit_ok' => sub {
 
-    my $app = Plack::App::Directory->new( root => $qunit_test_dir )->to_app;
-    my $runner = Plack::Runner->new;
-
-    my $pid = fork;
-
-    if ( $pid ) {
-    # parent
-
-        sleep(1);
+    run_with_plack {
 
         qunit_ok('http://localhost:8080/index.html');
 
-        system("kill -KILL $pid");
-
         done_testing;
-    }
-    else {
-    # child
-        note 'running Plack server for serving QUnit test suite';
-        $runner->run($app);
-    }
+    };
 
 });
 

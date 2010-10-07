@@ -1,73 +1,46 @@
 use strict;
 use Test::More;
 
-use Plack::App::Directory;
-use Plack::Runner;
-
 use Data::Util qw(:check);
 
 use Test::QUnit::Bridge::MozRepl;
+use t::Util;
 
 
 my $r = MozRepl->new;
 my $repl = MozRepl::RemoteObject->install_bridge($r);
 my $bridge = Test::QUnit::Bridge::MozRepl->new;
 
-my $qunit_test_dir = 't/qunit';
-
 
 subtest('tests for run_test' => sub {
 
-    my $app = Plack::App::Directory->new( root => $qunit_test_dir )->to_app;
-    my $runner = Plack::Runner->new;
+    run_with_plack {
 
-    my $pid = fork;
+      $bridge->hook_qunit_log();
 
-    if ( $pid ) {
-    # parent
+      my $result = $bridge->run_test('http://localhost:8080/index.html');
 
-        sleep(1);
+      $result->{length};
+      isnt($result, undef, 'we got a result');
+      isnt($result->{length}, undef, 'we got a wrapped array object');
 
-        $bridge->hook_qunit_log();
+      for ( my $i = 0, my $length = $result->{length}; $i < $length; $i++ ) {
+        my $item = $result->[$i];
+        isnt($item->{success}, undef, 'item has "success" property');
+        isnt($item->{message}, undef, 'item has "message" property');
+      }
 
-        my $result = $bridge->run_test('http://localhost:8080/index.html');
+      $bridge->cleanup();
 
-        $result->{length};
-        isnt($result, undef, 'we got a result');
-        isnt($result->{length}, undef, 'we got a wrapped array object');
-
-        for ( my $i = 0, my $length = $result->{length}; $i < $length; $i++ ) {
-            my $item = $result->[$i];
-            isnt($item->{success}, undef, 'item has "success" property');
-            isnt($item->{message}, undef, 'item has "message" property');
-        }
-
-        $bridge->cleanup();
-
-        system("kill -KILL $pid");
-
-        done_testing;
-    }
-    else {
-    # child
-        note 'running Plack server for serving QUnit test suite';
-        $runner->run($app);
-    }
+      done_testing;
+    };
 
 });
 
 
 subtest('tests for result_to_tap' => sub {
 
-    my $app = Plack::App::Directory->new( root => $qunit_test_dir )->to_app;
-    my $runner = Plack::Runner->new;
-
-    my $pid = fork;
-
-    if ( $pid ) {
-    # parent
-
-        sleep(1);
+    run_with_plack {
 
         $bridge->hook_qunit_log();
 
@@ -81,30 +54,15 @@ subtest('tests for result_to_tap' => sub {
 
         $bridge->cleanup();
 
-        system("kill -KILL $pid");
-
         done_testing;
-    }
-    else {
-    # child
-        note 'running Plack server for serving QUnit test suite';
-        $runner->run($app);
-    }
+    };
 
 });
 
 
 subtest('tests for run_qunit' => sub {
 
-    my $app = Plack::App::Directory->new( root => $qunit_test_dir )->to_app;
-    my $runner = Plack::Runner->new;
-
-    my $pid = fork;
-
-    if ( $pid ) {
-    # parent
-
-        sleep(1);
+    run_with_plack {
 
         my $tap_result = $bridge->run_qunit('http://localhost:8080/index.html');
 
@@ -113,15 +71,8 @@ subtest('tests for run_qunit' => sub {
             ok( is_string($result->{message} || $result->{message} eq ""), 'message should be string');
         }
 
-        system("kill -KILL $pid");
-
         done_testing;
-    }
-    else {
-    # child
-        note 'running Plack server for serving QUnit test suite';
-        $runner->run($app);
-    }
+    };
 
 });
 
