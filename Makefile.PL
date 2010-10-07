@@ -13,7 +13,7 @@ requires 'Plack::App::Directory';
 requires 'Time::HiRes';
 requires 'Data::Util';
 requires 'Class::Accessor::Fast';
-requires 'File::Basename';
+requires 'Path::Class';
 requires 'Carp::Clan';
 requires 'UNIVERSAL::require';
 

@@ -5,6 +5,7 @@ SYNOPSIS
       use Test::QUnit;
 
       qunit_ok('http://path/to/qunit/test.html', 'description');
+      qunit_local('local/path/to/qunit/test.html', 'description');
 
 DESCRIPTION
     Test::QUnit is testing framework to run QUnit test suites with prove,

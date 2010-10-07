@@ -9,7 +9,7 @@ use base qw(Test::Builder::Module);
 
 use Plack::App::Directory;
 use Plack::Runner;
-use File::Basename;
+use Path::Class;
 use UNIVERSAL::require;
 
 use Test::QUnit::Bridge::MozRepl;
@@ -42,15 +42,15 @@ sub qunit_local($;$) {
     my ($html_file_path, $msg) = @_;
 
     my $pid = fork;
-    my ($base_name, $dir) = fileparse($html_file_path);
+    my $file = file($html_file_path);
 
     if ( $pid ) {
       sleep(1);
-      qunit_ok('http://localhost:8080/' . $base_name, $msg);
+      qunit_ok('http://localhost:8080/' . $file->basename, $msg);
       kill 'KILL', $pid;
     }
     else {
-      my $app = Plack::App::Directory->new( +{ root => $dir } )->to_app;
+      my $app = Plack::App::Directory->new( +{ root => $file->dir } )->to_app;
       Plack::Runner->new()->run($app);
     }
 }
@@ -96,6 +96,7 @@ Test::QUnit - Yet Another Testing Framework for QUnit.
   use Test::QUnit;
 
   qunit_ok('http://path/to/qunit/test.html', 'description');
+  qunit_local('local/path/to/qunit/test.html', 'description');
 
 =head1 DESCRIPTION
 
