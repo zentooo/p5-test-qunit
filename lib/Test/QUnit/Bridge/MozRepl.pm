@@ -63,7 +63,7 @@ sub new {
                                 var message;
 
                                 if ( typeof msg === "undefined" || msg === "undefined" ) {
-                                    message = '<span class="test-message"></span>nothing<span class="test-expected"></span>';
+                                    message = "no test message";
                                 }
                                 else {
                                     message = msg;
@@ -163,8 +163,13 @@ sub result_to_tap {
         # convert test message
         my $message = "";
 
+        warn $item->{message};
+
         if ( is_string($item->{message}) ) {
             if ( $item->{message} =~ /<span class="test-message">(.*?)<\/span>/ ) {
+
+                $message = $1;
+
                 if ( $item->{message} =~ /<span class="test-expected">(.*?)<\/span>(?s:.*?)<span class="test-actual">(.*?)<\/span>/ ) {
                     $message .= " expected: $1 result: $2";
                 }
