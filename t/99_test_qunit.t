@@ -34,6 +34,14 @@ subtest('tests for qunit_ok' => sub {
 });
 
 
+subtest('tests for qunit_local' => sub {
+
+    qunit_local('t/qunit/index.html');
+
+    done_testing;
+});
+
+
 # close created tab
 
 $repl->expr(<<"JS");

@@ -6,10 +6,15 @@ our $VERSION = '0.03';
 binmode(STDOUT, ":utf8");
 
 use base qw(Test::Builder::Module);
+
+use Plack::App::Directory;
+use Plack::Runner;
+use File::Basename;
 use UNIVERSAL::require;
+
 use Test::QUnit::Bridge::MozRepl;
 
-our @EXPORT = qw(qunit_ok inject_bridge select_test_window select_onload_window onload);
+our @EXPORT = qw(qunit_ok qunit_local inject_bridge select_test_window select_onload_window onload);
 
 my %bridges;
 my $bridge = Test::QUnit::Bridge::MozRepl->new;
@@ -31,6 +36,23 @@ sub qunit_ok($;$) {
         }
         $builder->done_testing;
     });
+}
+
+sub qunit_local($;$) {
+    my ($html_file_path, $msg) = @_;
+
+    my $pid = fork;
+    my ($base_name, $dir) = fileparse($html_file_path);
+
+    if ( $pid ) {
+      sleep(1);
+      qunit_ok('http://localhost:8080/' . $base_name, $msg);
+      kill 'KILL', $pid;
+    }
+    else {
+      my $app = Plack::App::Directory->new( +{ root => $dir } )->to_app;
+      Plack::Runner->new()->run($app);
+    }
 }
 
 sub inject_bridge {

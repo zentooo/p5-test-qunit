@@ -9,9 +9,11 @@ githubmeta;
 requires 'Test::Builder::Module';
 requires 'MozRepl';
 requires 'MozRepl::RemoteObject';
+requires 'Plack::App::Directory';
 requires 'Time::HiRes';
 requires 'Data::Util';
 requires 'Class::Accessor::Fast';
+requires 'File::Basename';
 requires 'Carp::Clan';
 requires 'UNIVERSAL::require';
 
