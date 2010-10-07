@@ -13,28 +13,10 @@ my $repl = MozRepl::RemoteObject->install_bridge($r);
 
 BEGIN { use_ok 'Test::QUnit' }
 
-subtest('inject_bridge' => sub {
+subtest('exported methods' => sub {
 
-    inject_bridge('MozRepl' => MozRepl->new);
-    ok(1);
-    done_testing;
-});
+    can_ok('main', qw/inject_bridge select_test_window select_onload_window onload qunit_ok/);
 
-subtest('select_test_window' => sub {
-
-    select_test_window("function() {
-        return true;
-    }");
-    ok(1);
-    done_testing;
-});
-
-subtest('inject_onload_window' => sub {
-
-    select_onload_window("function() {
-        return true;
-    }");
-    ok(1);
     done_testing;
 });
 

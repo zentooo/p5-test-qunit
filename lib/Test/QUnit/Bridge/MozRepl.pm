@@ -163,8 +163,6 @@ sub result_to_tap {
         # convert test message
         my $message = "";
 
-        warn $item->{message};
-
         if ( is_string($item->{message}) ) {
             if ( $item->{message} =~ /<span class="test-message">(.*?)<\/span>/ ) {
 
