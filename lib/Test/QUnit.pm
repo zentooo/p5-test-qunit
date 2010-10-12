@@ -113,6 +113,7 @@ Test::QUnit - Yet Another Testing Framework for QUnit.
   use Test::QUnit;
 
   qunit_remote('http://path/to/qunit/test.html', 'description');
+
   qunit_local_html('local/path/to/qunit/test.html', 'description');
 
 =head1 DESCRIPTION
