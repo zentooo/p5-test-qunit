@@ -22,6 +22,17 @@ subtest('exported methods' => sub {
 });
 
 
+subtest('tests for qunit_ok' => sub {
+
+    run_with_plack {
+
+        qunit_ok('http://localhost:8080/index.html');
+
+        done_testing;
+    };
+
+});
+
 subtest('tests for qunit_remote' => sub {
 
     run_with_plack {
@@ -36,6 +47,8 @@ subtest('tests for qunit_remote' => sub {
 
 subtest('tests for qunit_local_html' => sub {
 
+    qunit_local('t/qunit/index.html');
+
     qunit_local_html('t/qunit/index.html');
 
     done_testing;
@@ -46,6 +59,7 @@ subtest('tests for qunit_local_html' => sub {
 
 $repl->expr(<<"JS");
   var tabs = getBrowser().tabs;
+  tabs[tabs.length - 1].linkedBrowser.contentWindow.close();
   tabs[tabs.length - 1].linkedBrowser.contentWindow.close();
 JS
 

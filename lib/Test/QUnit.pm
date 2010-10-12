@@ -10,23 +10,35 @@ use base qw(Test::Builder::Module);
 use Plack::App::Directory;
 use Plack::Runner;
 use Path::Class;
+use Try::Tiny;
 use UNIVERSAL::require;
 
 use Test::QUnit::Bridge::MozRepl;
 
-our @EXPORT = qw(qunit_remote qunit_local_html inject_bridge select_test_window select_onload_window onload);
+our @EXPORT = qw(qunit_ok qunit_remote qunit_local qunit_local_html inject_bridge select_test_window select_onload_window onload);
 
 my %bridges;
-my $bridge = Test::QUnit::Bridge::MozRepl->new;
-$bridges{'MozRepl'} = $bridge;
-
-my $builder = __PACKAGE__->builder;
 
 
-sub qunit_remote($;$) {
+my $bridge;
+try {
+  $bridge = Test::QUnit::Bridge::MozRepl->new;
+} catch {
+  die "initialization of bridge failed: $_";
+};
+inject_bridge('MozRepl', $bridge);
+
+
+sub qunit_ok {
+  warn "<WARNING> qunit_ok is deprecated, please use qunit_remote instaad.";
+  qunit_remote($_[0], $_[1]);
+}
+
+sub qunit_remote {
     my ($url, $msg) = @_;
 
     my $message = $msg || '';
+    my $builder = __PACKAGE__->builder;
 
     my $tap_result = $bridge->run_qunit($url);
 
@@ -38,7 +50,12 @@ sub qunit_remote($;$) {
     });
 }
 
-sub qunit_local_html($;$) {
+sub qunit_local {
+  warn "<WARNING> qunit_local is deprecated, please use qunit_local_html instaad.";
+  qunit_local_html($_[0], $_[1]);
+}
+
+sub qunit_local_html {
     my ($html_file_path, $msg) = @_;
 
     my $pid = fork;
@@ -64,7 +81,7 @@ sub inject_bridge {
     }
     else {
         my $module_name = "Test::QUnit::Bridge::$name";
-        $module_name->require;
+        $module_name->require or die "Test::QUnit::Bridge::$name not found in \@INC";
         no strict 'refs';
         $bridge = $module_name->new;
         $bridge->inject_bridge($imple);

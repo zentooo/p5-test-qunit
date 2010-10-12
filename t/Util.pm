@@ -14,7 +14,6 @@ my $qunit_test_dir = 't/qunit';
 sub run_with_plack(&) {
   my $test = shift;
 
-
   my $pid = fork;
 
   if ( $pid ) {
