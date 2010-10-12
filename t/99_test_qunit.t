@@ -16,17 +16,17 @@ BEGIN { use_ok 'Test::QUnit' }
 
 subtest('exported methods' => sub {
 
-    can_ok('main', qw/inject_bridge select_test_window select_onload_window onload qunit_ok/);
+    can_ok('main', qw/inject_bridge select_test_window select_onload_window onload qunit_remote qunit_local_html/);
 
     done_testing;
 });
 
 
-subtest('tests for qunit_ok' => sub {
+subtest('tests for qunit_remote' => sub {
 
     run_with_plack {
 
-        qunit_ok('http://localhost:8080/index.html');
+        qunit_remote('http://localhost:8080/index.html');
 
         done_testing;
     };
@@ -34,9 +34,9 @@ subtest('tests for qunit_ok' => sub {
 });
 
 
-subtest('tests for qunit_local' => sub {
+subtest('tests for qunit_local_html' => sub {
 
-    qunit_local('t/qunit/index.html');
+    qunit_local_html('t/qunit/index.html');
 
     done_testing;
 });

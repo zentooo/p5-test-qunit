@@ -14,7 +14,7 @@ use UNIVERSAL::require;
 
 use Test::QUnit::Bridge::MozRepl;
 
-our @EXPORT = qw(qunit_ok qunit_local inject_bridge select_test_window select_onload_window onload);
+our @EXPORT = qw(qunit_remote qunit_local_html inject_bridge select_test_window select_onload_window onload);
 
 my %bridges;
 my $bridge = Test::QUnit::Bridge::MozRepl->new;
@@ -23,7 +23,7 @@ $bridges{'MozRepl'} = $bridge;
 my $builder = __PACKAGE__->builder;
 
 
-sub qunit_ok($;$) {
+sub qunit_remote($;$) {
     my ($url, $msg) = @_;
 
     my $message = $msg || '';
@@ -38,7 +38,7 @@ sub qunit_ok($;$) {
     });
 }
 
-sub qunit_local($;$) {
+sub qunit_local_html($;$) {
     my ($html_file_path, $msg) = @_;
 
     my $pid = fork;
@@ -46,7 +46,7 @@ sub qunit_local($;$) {
 
     if ( $pid ) {
       sleep(1);
-      qunit_ok('http://localhost:8080/' . $file->basename, $msg);
+      qunit_remote('http://localhost:8080/' . $file->basename, $msg);
       kill 'KILL', $pid;
     }
     else {
@@ -95,8 +95,8 @@ Test::QUnit - Yet Another Testing Framework for QUnit.
 
   use Test::QUnit;
 
-  qunit_ok('http://path/to/qunit/test.html', 'description');
-  qunit_local('local/path/to/qunit/test.html', 'description');
+  qunit_remote('http://path/to/qunit/test.html', 'description');
+  qunit_local_html('local/path/to/qunit/test.html', 'description');
 
 =head1 DESCRIPTION
 
