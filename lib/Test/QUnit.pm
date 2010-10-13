@@ -6,6 +6,7 @@ our $VERSION = '0.03';
 binmode(STDOUT, ":utf8");
 
 use base qw(Test::Builder::Module);
+use Test::TCP;
 
 use Plack::App::Directory;
 use Plack::Runner;
@@ -58,18 +59,20 @@ sub qunit_local {
 sub qunit_local_html {
     my ($html_file_path, $msg) = @_;
 
-    my $pid = fork;
     my $file = file($html_file_path);
 
-    if ( $pid ) {
-      sleep(1);
-      qunit_remote('http://localhost:8080/' . $file->basename, $msg);
-      kill 'KILL', $pid;
-    }
-    else {
-      my $app = Plack::App::Directory->new( +{ root => $file->dir } )->to_app;
-      Plack::Runner->new()->run($app);
-    }
+    test_tcp(
+      client => sub {
+        my $port = shift;
+        qunit_remote("http://localhost:$port/" . $file->basename, $msg);
+      },
+      server => sub {
+        my $app = Plack::App::Directory->new( +{ root => $file->dir } )->to_app;
+        my $runner = Plack::Runner->new();
+        $runner->parse_options('-p' => shift);
+        $runner->run($app);
+      }
+    );
 }
 
 sub inject_bridge {

@@ -3,36 +3,32 @@ package t::Util;
 use Plack::App::Directory;
 use Plack::Runner;
 use Test::More;
+use Test::TCP;
 
-our @EXPORT = qw/run_with_plack/;
+our @EXPORT = qw/test_with_plack/;
 use base qw/Exporter/;
 
 
 my $qunit_test_dir = 't/qunit';
 
 
-sub run_with_plack(&) {
-  my $test = shift;
+sub test_with_plack(&) {
+  my $test_code = shift;
 
-  my $pid = fork;
+  test_tcp(
+    client => sub {
+      $test_code->(shift);
+    },
+    server => sub {
+      my $app = Plack::App::Directory->new( root => $qunit_test_dir )->to_app;
+      my $runner = Plack::Runner->new;
+      $runner->parse_options('-p' => shift);
+      $runner->run($app);
 
-  if ( $pid ) {
-    # parent
-    sleep(1);
-
-    $test->();
-
-    kill 'KILL', $pid;
-  }
-  else {
-    # child
-
-    my $app = Plack::App::Directory->new( root => $qunit_test_dir )->to_app;
-    my $runner = Plack::Runner->new;
-    $runner->run($app);
-
-    note 'running Plack server for serving QUnit test suite';
-  }
+      note 'running Plack server for serving QUnit test suite';
+    }
+  );
 }
+
 
 1;

@@ -14,11 +14,12 @@ my $bridge = Test::QUnit::Bridge::MozRepl->new;
 
 subtest('tests for run_test' => sub {
 
-    run_with_plack {
+    test_with_plack {
+      my $port = shift;
 
       $bridge->hook_qunit_log();
 
-      my $result = $bridge->run_test('http://localhost:8080/index.html');
+      my $result = $bridge->run_test("http://localhost:$port/index.html");
 
       $result->{length};
       isnt($result, undef, 'we got a result');
@@ -40,21 +41,22 @@ subtest('tests for run_test' => sub {
 
 subtest('tests for result_to_tap' => sub {
 
-    run_with_plack {
+    test_with_plack {
+      my $port = shift;
 
-        $bridge->hook_qunit_log();
+      $bridge->hook_qunit_log();
 
-        my $raw_result = $bridge->run_test('http://localhost:8080/index.html');
-        my $tap_result = $bridge->result_to_tap($raw_result);
+      my $raw_result = $bridge->run_test("http://localhost:$port/index.html");
+      my $tap_result = $bridge->result_to_tap($raw_result);
 
-        for my $result (@$tap_result) {
-            ok( $result->{success} == 0 || $result->{success} == 1, 'success flag should be 0 or 1');
-            ok( is_string($result->{message} || $result->{message} eq ""), 'message should be string');
-        }
+      for my $result (@$tap_result) {
+          ok( $result->{success} == 0 || $result->{success} == 1, 'success flag should be 0 or 1');
+          ok( is_string($result->{message} || $result->{message} eq ""), 'message should be string');
+      }
 
-        $bridge->cleanup();
+      $bridge->cleanup();
 
-        done_testing;
+      done_testing;
     };
 
 });
@@ -62,16 +64,17 @@ subtest('tests for result_to_tap' => sub {
 
 subtest('tests for run_qunit' => sub {
 
-    run_with_plack {
+    test_with_plack {
+      my $port = shift;
 
-        my $tap_result = $bridge->run_qunit('http://localhost:8080/index.html');
+      my $tap_result = $bridge->run_qunit("http://localhost:$port/index.html");
 
-        for my $result (@$tap_result) {
-            ok( $result->{success} == 0 || $result->{success} == 1, 'success flag should be 0 or 1');
-            ok( is_string($result->{message} || $result->{message} eq ""), 'message should be string');
-        }
+      for my $result (@$tap_result) {
+          ok( $result->{success} == 0 || $result->{success} == 1, 'success flag should be 0 or 1');
+          ok( is_string($result->{message} || $result->{message} eq ""), 'message should be string');
+      }
 
-        done_testing;
+      done_testing;
     };
 
 });
