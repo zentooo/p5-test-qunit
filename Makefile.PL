@@ -15,6 +15,7 @@ requires 'Data::Util';
 requires 'Class::Accessor::Fast';
 requires 'Path::Class';
 requires 'Carp::Clan';
+requires 'Try::Tiny';
 requires 'UNIVERSAL::require';
 
 test_requires 'Test::More' => '0.94';
