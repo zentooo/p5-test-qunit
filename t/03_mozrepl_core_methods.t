@@ -32,8 +32,6 @@ subtest('tests for run_test' => sub {
       }
 
       $bridge->cleanup();
-
-      done_testing;
     };
 
 });
@@ -55,8 +53,6 @@ subtest('tests for result_to_tap' => sub {
       }
 
       $bridge->cleanup();
-
-      done_testing;
     };
 
 });
@@ -73,8 +69,6 @@ subtest('tests for run_qunit' => sub {
           ok( $result->{success} == 0 || $result->{success} == 1, 'success flag should be 0 or 1');
           ok( is_string($result->{message} || $result->{message} eq ""), 'message should be string');
       }
-
-      done_testing;
     };
 
 });

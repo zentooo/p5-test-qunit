@@ -26,7 +26,6 @@ subtest('tests for qunit_ok' => sub {
   test_with_plack {
     my $port = shift;
     qunit_ok("http://localhost:$port/index.html");
-    done_testing;
   };
 
 });
@@ -36,7 +35,6 @@ subtest('tests for qunit_remote' => sub {
   test_with_plack {
     my $port = shift;
     qunit_remote("http://localhost:$port/index.html");
-    done_testing;
   };
 
 });

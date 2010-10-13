@@ -18,6 +18,7 @@ sub test_with_plack(&) {
   test_tcp(
     client => sub {
       $test_code->(shift);
+      done_testing;
     },
     server => sub {
       my $app = Plack::App::Directory->new( root => $qunit_test_dir )->to_app;
