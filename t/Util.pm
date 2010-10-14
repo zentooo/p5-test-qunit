@@ -1,7 +1,7 @@
 package t::Util;
 
 use Plack::App::Directory;
-use Plack::Runner;
+use Plack::Loader;
 use Test::More;
 use Test::TCP;
 
@@ -22,9 +22,11 @@ sub test_with_plack(&) {
     },
     server => sub {
       my $app = Plack::App::Directory->new( root => $qunit_test_dir )->to_app;
-      my $runner = Plack::Runner->new;
-      $runner->parse_options('-p' => shift);
-      $runner->run($app);
+      my $server = Plack::Loader->auto(
+        port => shift,
+        host => '127.0.0.1',
+      );
+      $server->run($app);
 
       note 'running Plack server for serving QUnit test suite';
     }

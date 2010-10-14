@@ -9,7 +9,7 @@ use base qw(Test::Builder::Module);
 use Test::TCP;
 
 use Plack::App::Directory;
-use Plack::Runner;
+use Plack::Loader;
 use Path::Class;
 use Try::Tiny;
 use UNIVERSAL::require;
@@ -68,9 +68,11 @@ sub qunit_local_html {
       },
       server => sub {
         my $app = Plack::App::Directory->new( +{ root => $file->dir } )->to_app;
-        my $runner = Plack::Runner->new();
-        $runner->parse_options('-p' => shift);
-        $runner->run($app);
+        my $server = Plack::Loader->auto(
+          port => shift,
+          host => '127.0.0.1',
+        );
+        $server->run($app);
       }
     );
 }

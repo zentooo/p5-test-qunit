@@ -14,7 +14,7 @@ requires 'MozRepl';
 requires 'MozRepl::RemoteObject';
 
 requires 'Plack::App::Directory';
-requires 'Plack::Runner';
+requires 'Plack::Loader';
 
 requires 'Data::Util';
 requires 'Class::Accessor::Fast';
@@ -30,7 +30,7 @@ test_requires 'Test::More' => '0.94';
 test_requires 'Test::TCP';
 
 test_requires 'Plack::App::Directory';
-test_requires 'Plack::Runner';
+test_requires 'Plack::Loader';
 
 test_requires 'Data::Util';
 
