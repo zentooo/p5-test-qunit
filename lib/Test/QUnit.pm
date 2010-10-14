@@ -51,12 +51,12 @@ sub qunit_remote {
     });
 }
 
-sub qunit_local {
-  warn "<WARNING> qunit_local is deprecated, please use qunit_local_html instaad.";
-  qunit_local_html($_[0], $_[1]);
-}
+#sub qunit_local {
+  #warn "<WARNING> qunit_local is deprecated, please use qunit_local_html instaad.";
+  #qunit_local_html($_[0], $_[1]);
+#}
 
-sub qunit_local_html {
+sub qunit_local {
     my ($html_file_path, $msg) = @_;
 
     my $file = file($html_file_path);
