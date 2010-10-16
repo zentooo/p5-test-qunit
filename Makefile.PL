@@ -2,9 +2,7 @@ use inc::Module::Install;
 name 'Test-QUnit';
 all_from 'lib/Test/QUnit.pm';
 readme_from 'lib/Test/QUnit.pm';
-readme_markdown_from 'lib/Test/QUnit.pm';
 readme_pod_from 'lib/Test/QUnit.pm';
-githubmeta;
 
 
 requires 'Test::Builder::Module';
