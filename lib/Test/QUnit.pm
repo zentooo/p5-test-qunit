@@ -14,6 +14,7 @@ use Path::Class;
 use Try::Tiny;
 use UNIVERSAL::require;
 
+use MozRepl;
 use Test::QUnit::Bridge::MozRepl;
 
 our @EXPORT = qw(qunit_ok qunit_remote qunit_local qunit_local_html inject_bridge select_test_window select_onload_window onload);

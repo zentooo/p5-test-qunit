@@ -36,6 +36,5 @@ test_requires 'Data::Util';
 tests 't/*.t';
 
 build_requires 'Test::More';
-auto_set_repository;
 auto_include;
 WriteAll;

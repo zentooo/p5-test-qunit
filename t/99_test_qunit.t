@@ -44,8 +44,6 @@ subtest('tests for qunit_local_html' => sub {
 
   qunit_local('t/qunit/index.html');
 
-  qunit_local_html('t/qunit/index.html');
-
   done_testing;
 });
 
