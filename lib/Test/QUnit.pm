@@ -14,20 +14,21 @@ use Path::Class;
 use Try::Tiny;
 use UNIVERSAL::require;
 
+use MozRepl;
 use Test::QUnit::Bridge::MozRepl;
 
 our @EXPORT = qw(qunit_ok qunit_remote qunit_local qunit_local_html inject_bridge select_test_window select_onload_window onload);
 
 my %bridges;
-
-
 my $bridge;
+
+my $repl;
 try {
-  $bridge = Test::QUnit::Bridge::MozRepl->new;
+  $repl = MozRepl->new();
 } catch {
   die "initialization of bridge failed: $_";
 };
-inject_bridge('MozRepl', $bridge);
+inject_bridge('MozRepl', $repl);
 
 
 sub qunit_ok {
@@ -50,11 +51,6 @@ sub qunit_remote {
         $builder->done_testing;
     });
 }
-
-#sub qunit_local {
-  #warn "<WARNING> qunit_local is deprecated, please use qunit_local_html instaad.";
-  #qunit_local_html($_[0], $_[1]);
-#}
 
 sub qunit_local {
     my ($html_file_path, $msg) = @_;

@@ -40,11 +40,9 @@ subtest('tests for qunit_remote' => sub {
 });
 
 
-subtest('tests for qunit_local_html' => sub {
+subtest('tests for qunit_local' => sub {
 
   qunit_local('t/qunit/index.html');
-
-  qunit_local_html('t/qunit/index.html');
 
   done_testing;
 });
